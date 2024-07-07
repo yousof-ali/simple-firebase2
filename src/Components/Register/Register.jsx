@@ -1,44 +1,56 @@
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import auth from "../Firebase/firebase.config";
 import { useState } from "react";
+import { BiShow,  BiSolidHide } from "react-icons/bi";
 
 
 const Register = () => {
-    const [error,setError]=useState('');
-    const [success,setSuccess] = useState('')
-    
+    const [error, setError] = useState('');
+    const [success, setSuccess] = useState('');
+    const [showpass, setShowpss] = useState(false);
 
-    const handleSubmit = e =>{
+    const handleShow = () => {
+        setShowpss(!showpass);
+
+    }
+
+
+    const handleSubmit = e => {
         e.preventDefault();
         setError('');
         setSuccess('');
         const userEmail = e.target.email.value;
         const userPassword = e.target.pass.value
-        if(userPassword.length<6){
+        if (userPassword.length < 6) {
             setError("Password should be at least 6 characters");
             return;
         }
-        else if(!/[A-Z]/.test(userPassword)){
+        else if (!/[A-Z]/.test(userPassword)) {
             setError("Password should be one uppercase characters")
             return;
         }
-        createUserWithEmailAndPassword(auth,userEmail,userPassword)
-        .then(result=>{
-            console.log(result.user);
-            setSuccess("User created Successfully!")
-        })
-        .catch((error)=>{
-            console.log(error.message);
-            setError(error.message);
+        createUserWithEmailAndPassword(auth, userEmail, userPassword)
+            .then(result => {
+                console.log(result.user);
+                setSuccess("User created Successfully!")
+            })
+            .catch((error) => {
+                console.log(error.message);
+                setError(error.message);
 
-        })
+            })
     }
     return (
         <div className="max-w-[600px] px-6 md:px-0 mx-auto space-y-6">
             <h2 className="text-3xl font-bold text-center">Register Your Account</h2>
             <form onSubmit={handleSubmit} className="md:w-1/2 mx-auto space-y-3">
-                <input type="email" className="bg-gray-200 px-2 py-3  outline-none rounded w-full" name="email" placeholder="Enter your Email" required/>
-                <input type="password" className="bg-gray-200 px-2 py-3  outline-none rounded w-full" name="pass" placeholder="Enter your Password" required />
+                <input type="email" className="bg-gray-200 px-2 py-3  outline-none rounded w-full" name="email" placeholder="Enter your Email" required />
+                <div className="flex justify-center items-center bg-gray-200 ">
+                    <input type={showpass ? "text" : "password"} className="bg-gray-200 px-2 py-3  outline-none rounded w-full" name="pass" placeholder="Enter your Password" required />
+                    <div>
+                        {showpass?<BiSolidHide onClick={handleShow} className="text-2xl mr-2" />:<BiShow onClick={handleShow} className="text-2xl mr-2" />}
+                    </div>
+                </div>
                 <div className="flex justify-center">
                     <input type="submit" value={'Register'} className="btn btn-secondary" />
                 </div>
