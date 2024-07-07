@@ -1,7 +1,8 @@
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import auth from "../Firebase/firebase.config";
 import { useState } from "react";
-import { BiShow,  BiSolidHide } from "react-icons/bi";
+import { BiShow, BiSolidHide } from "react-icons/bi";
+
 
 
 const Register = () => {
@@ -13,14 +14,16 @@ const Register = () => {
         setShowpss(!showpass);
 
     }
-
-
+    
+    
     const handleSubmit = e => {
-        e.preventDefault();
+        
+        e.preventDefault();     
         setError('');
         setSuccess('');
         const userEmail = e.target.email.value;
         const userPassword = e.target.pass.value
+        const checkbox = e.target.checkbox.checked
         if (userPassword.length < 6) {
             setError("Password should be at least 6 characters");
             return;
@@ -28,6 +31,10 @@ const Register = () => {
         else if (!/[A-Z]/.test(userPassword)) {
             setError("Password should be one uppercase characters")
             return;
+        }
+        else if(!checkbox){
+            setError("Click check box");
+            return
         }
         createUserWithEmailAndPassword(auth, userEmail, userPassword)
             .then(result => {
@@ -48,12 +55,18 @@ const Register = () => {
                 <div className="flex justify-center items-center bg-gray-200 ">
                     <input type={showpass ? "text" : "password"} className="bg-gray-200 px-2 py-3  outline-none rounded w-full" name="pass" placeholder="Enter your Password" required />
                     <div>
-                        {showpass?<BiSolidHide onClick={handleShow} className="text-2xl mr-2" />:<BiShow onClick={handleShow} className="text-2xl mr-2" />}
+                        {showpass ? <BiSolidHide onClick={handleShow} className="text-2xl mr-2" /> : <BiShow onClick={handleShow} className="text-2xl mr-2" />}
                     </div>
+                </div>
+                <div>
+                    <input type="checkbox" name="checkbox" id="chekb" />
+                    <label className="text-gray-400 ml-2" htmlFor="chekb">Accpet Terms And Conditions</label>
+
                 </div>
                 <div className="flex justify-center">
                     <input type="submit" value={'Register'} className="btn btn-secondary" />
                 </div>
+
             </form>
             {
                 error && <p className="text-red-600">{error}</p>
