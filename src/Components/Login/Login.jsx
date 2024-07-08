@@ -24,6 +24,9 @@ const Login = () => {
                 setSuccess("Successfully login !")
                 e.target.email.value='';
                 e.target.pass.value='';
+                if(!result.user.emailVerified){
+                    setError('check your email for email verify!');
+                }
             })
             .catch((error) => {
                 const err = error.message;

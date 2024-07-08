@@ -1,4 +1,4 @@
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
 import auth from "../Firebase/firebase.config";
 import { useState } from "react";
 import { BiShow, BiSolidHide } from "react-icons/bi";
@@ -41,6 +41,14 @@ const Register = () => {
             .then(result => {
                 console.log(result.user);
                 setSuccess("User created Successfully!")
+
+                sendEmailVerification(result.user)
+                .then(result=>{
+                    setSuccess("check your email for email verify!")
+                })
+                .catch((error)=>{
+                    setError("something went wrong!")
+                })
             })
             .catch((error) => {
                 console.log(error.message);
