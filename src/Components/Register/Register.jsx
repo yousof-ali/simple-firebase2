@@ -1,4 +1,4 @@
-import { createUserWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
+import { createUserWithEmailAndPassword, sendEmailVerification, updateProfile } from "firebase/auth";
 import auth from "../Firebase/firebase.config";
 import { useState } from "react";
 import { BiShow, BiSolidHide } from "react-icons/bi";
@@ -15,16 +15,18 @@ const Register = () => {
         setShowpss(!showpass);
 
     }
-    
-    
+
+
     const handleSubmit = e => {
-        
-        e.preventDefault();     
+
+        e.preventDefault();
         setError('');
         setSuccess('');
         const userEmail = e.target.email.value;
-        const userPassword = e.target.pass.value
-        const checkbox = e.target.checkbox.checked
+        const userPassword = e.target.pass.value;
+        const checkbox = e.target.checkbox.checked;
+        const Name = e.target.name.value;
+        console.log(Name)
         if (userPassword.length < 6) {
             setError("Password should be at least 6 characters");
             return;
@@ -33,22 +35,31 @@ const Register = () => {
             setError("Password should be one uppercase characters")
             return;
         }
-        else if(!checkbox){
+        else if (!checkbox) {
             setError("Click check box");
             return
         }
         createUserWithEmailAndPassword(auth, userEmail, userPassword)
             .then(result => {
                 console.log(result.user);
+                updateProfile(result.user,{
+                    displayName:Name
+                })
+                .then(result=>{
+                    console.log("Profile updated!")
+                })
+                .catch((error)=>{
+                    console.log(error.message);
+                })
                 setSuccess("User created Successfully!")
 
                 sendEmailVerification(result.user)
-                .then(result=>{
-                    setSuccess("check your email for email verify!")
-                })
-                .catch((error)=>{
-                    setError("something went wrong!")
-                })
+                    .then(result => {
+                        setSuccess("check your email for email verify!")
+                    })
+                    .catch((error) => {
+                        setError("something went wrong!")
+                    })
             })
             .catch((error) => {
                 console.log(error.message);
@@ -60,6 +71,7 @@ const Register = () => {
         <div className="max-w-[600px] px-6 md:px-0 mx-auto space-y-6">
             <h2 className="text-3xl font-bold text-center">Register Your Account</h2>
             <form onSubmit={handleSubmit} className="md:w-1/2 mx-auto space-y-3">
+                <input type="text" className="bg-gray-200 px-2 py-3  outline-none rounded w-full" name="name" placeholder="Enter your Name" required />
                 <input type="email" className="bg-gray-200 px-2 py-3  outline-none rounded w-full" name="email" placeholder="Enter your Email" required />
                 <div className="flex justify-center items-center bg-gray-200 ">
                     <input type={showpass ? "text" : "password"} className="bg-gray-200 px-2 py-3  outline-none rounded w-full" name="pass" placeholder="Enter your Password" required />
