@@ -2,6 +2,7 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 import auth from "../Firebase/firebase.config";
 import { useState } from "react";
 import { BiShow, BiSolidHide } from "react-icons/bi";
+import { Link } from "react-router-dom";
 
 
 
@@ -66,6 +67,7 @@ const Register = () => {
                 <div className="flex justify-center">
                     <input type="submit" value={'Register'} className="btn btn-secondary" />
                 </div>
+                <p>Already have an account? <Link to={"/login"} className="text-pink-700 hover:underline ">Log In</Link></p>
 
             </form>
             {
